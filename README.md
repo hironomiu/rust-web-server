@@ -3,8 +3,8 @@
 `cargo add`の際に`error: no such subcommand:`で怒られる場合は`cargo install cargo-edit`を行う
 
 ```
-cargo new todo
-cd ./todo
+cargo new rust-web-server
+cd ./rust-web-server
 cargo add actix-web actix-rt
 ```
 
