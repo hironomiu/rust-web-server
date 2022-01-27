@@ -1,5 +1,13 @@
 use actix_cors::Cors;
-use actix_web::{get, head, http, post, web, App, HttpResponse, HttpServer};
+use actix_web::{
+    // get, head,
+    http,
+    post,
+    web,
+    App,
+    HttpResponse,
+    HttpServer,
+};
 use serde::Deserialize;
 use serde::Serialize;
 
@@ -8,7 +16,7 @@ struct AddParams {
     text: String,
 }
 
-#[get("/")]
+// #[get("/")]
 async fn index_get() -> Result<HttpResponse, actix_web::Error> {
     println!("get /");
     let response_body = "Hello world!!!";
@@ -16,7 +24,7 @@ async fn index_get() -> Result<HttpResponse, actix_web::Error> {
 }
 
 // TODO curlでのcors確認用、不要になったら削除する
-#[head("/")]
+// #[head("/")]
 async fn index_head() -> Result<HttpResponse, actix_web::Error> {
     println!("head /");
     let response_body = "Hello world!!!";
@@ -56,11 +64,9 @@ struct HelloPost {
 // #[post("/api/v1/hello")]
 async fn hello_post(parms: web::Json<HelloPost>) -> Result<HttpResponse, actix_web::Error> {
     println!("post /api/v1/hello {}", parms.message);
-    // let message = "hello!hello!";
     let id: Option<u32> = Some(1);
     Ok(HttpResponse::Ok().json(Hello {
         id: id,
-        // message: String::from(message),
         message: String::from(&parms.message),
         is_success: true,
     }))
@@ -79,8 +85,11 @@ async fn main() -> Result<(), actix_web::Error> {
             .max_age(3600);
         App::new()
             .wrap(cors)
-            .service(index_get)
-            .service(index_head)
+            .service(
+                web::scope("/")
+                    .route("", web::get().to(index_get))
+                    .route("", web::head().to(index_head)),
+            )
             .service(index_post)
             .service(
                 web::scope("/api/v1")
