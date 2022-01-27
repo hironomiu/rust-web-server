@@ -21,7 +21,7 @@ curl -X POST --data-urlencode 'text=hello' localhost:5555
 ```
 
 ```
-curl -X POST -H  "Content-Type: application/json" -d '{"text":"John"}' localhost:5555/api/v1/hello
+curl -X POST -H  "Content-Type: application/json" -d '{"message":"Hi!John"}' localhost:5555/api/v1/hello
 ```
 
 ## Install Memo
