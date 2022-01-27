@@ -1,8 +1,7 @@
 use actix_cors::Cors;
 use actix_web::{
-    // get, head,
+    // get, post, head,
     http,
-    post,
     web,
     App,
     HttpResponse,
@@ -31,10 +30,10 @@ async fn index_head() -> Result<HttpResponse, actix_web::Error> {
     Ok(HttpResponse::Ok().body(response_body))
 }
 
-#[post("/")]
+// #[post("/")]
 async fn index_post(parms: web::Form<AddParams>) -> Result<HttpResponse, actix_web::Error> {
     println!("post /: {}", parms.text);
-    Ok(HttpResponse::Ok().body("body"))
+    Ok(HttpResponse::Ok().body(String::from(&parms.text)))
 }
 
 #[derive(Serialize, Deserialize)]
@@ -88,9 +87,10 @@ async fn main() -> Result<(), actix_web::Error> {
             .service(
                 web::scope("/")
                     .route("", web::get().to(index_get))
-                    .route("", web::head().to(index_head)),
+                    .route("", web::head().to(index_head))
+                    .route("", web::post().to(index_post)),
             )
-            .service(index_post)
+            // .service(index_post)
             .service(
                 web::scope("/api")
                     .service(
