@@ -36,7 +36,7 @@ struct Hello {
     is_success: bool,
 }
 
-#[get("/api/v1/hello")]
+// #[get("/api/v1/hello")]
 async fn hello_get() -> Result<HttpResponse, actix_web::Error> {
     println!("get /api/v1/hello");
     let message = "hello!hello!";
@@ -53,7 +53,7 @@ struct HelloPost {
     message: String,
 }
 
-#[post("/api/v1/hello")]
+// #[post("/api/v1/hello")]
 async fn hello_post(parms: web::Json<HelloPost>) -> Result<HttpResponse, actix_web::Error> {
     println!("post /api/v1/hello {}", parms.message);
     // let message = "hello!hello!";
@@ -82,8 +82,11 @@ async fn main() -> Result<(), actix_web::Error> {
             .service(index_get)
             .service(index_head)
             .service(index_post)
-            .service(hello_get)
-            .service(hello_post)
+            .service(
+                web::scope("/api/v1")
+                    .route("/hello", web::get().to(hello_get))
+                    .route("/hello", web::post().to(hello_post)),
+            )
     })
     .bind("localhost:5555")?
     .run()
