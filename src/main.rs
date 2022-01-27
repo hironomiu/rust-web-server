@@ -56,12 +56,12 @@ struct HelloPost {
 #[post("/api/v1/hello")]
 async fn hello_post(parms: web::Json<HelloPost>) -> Result<HttpResponse, actix_web::Error> {
     println!("post /api/v1/hello {}", parms.message);
-    let message = "hello!hello!";
+    // let message = "hello!hello!";
     let id: Option<u32> = Some(1);
     Ok(HttpResponse::Ok().json(Hello {
         id: id,
-        message: String::from(message),
-        // message: String::from(parms.message),
+        // message: String::from(message),
+        message: String::from(&parms.message),
         is_success: true,
     }))
 }
