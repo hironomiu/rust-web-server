@@ -92,9 +92,16 @@ async fn main() -> Result<(), actix_web::Error> {
             )
             .service(index_post)
             .service(
-                web::scope("/api/v1")
-                    .route("/hello", web::get().to(hello_get))
-                    .route("/hello", web::post().to(hello_post)),
+                web::scope("/api")
+                    .service(
+                        web::scope("/v1")
+                            // /api/v1/hello
+                            // .service(web::resource("/hello").to(hello_get))
+                            .route("/hello", web::get().to(hello_get))
+                            .route("/hello", web::post().to(hello_post)),
+                    )
+                    // /api/hello
+                    .route("/hello", web::get().to(hello_get)),
             )
     })
     .bind("localhost:5555")?
