@@ -1,4 +1,5 @@
-use actix_web::{get, post, web, App, HttpResponse, HttpServer};
+use actix_cors::Cors;
+use actix_web::{get, head, http, post, web, App, HttpResponse, HttpServer};
 use serde::Deserialize;
 use serde::Serialize;
 
@@ -10,6 +11,14 @@ struct AddParams {
 #[get("/")]
 async fn index_get() -> Result<HttpResponse, actix_web::Error> {
     println!("get /");
+    let response_body = "Hello world!!!";
+    Ok(HttpResponse::Ok().body(response_body))
+}
+
+// TODO curlでのcors確認用、不要になったら削除する
+#[head("/")]
+async fn index_head() -> Result<HttpResponse, actix_web::Error> {
+    println!("head /");
     let response_body = "Hello world!!!";
     Ok(HttpResponse::Ok().body(response_body))
 }
@@ -61,8 +70,17 @@ async fn hello_post(parms: web::Json<HelloPost>) -> Result<HttpResponse, actix_w
 async fn main() -> Result<(), actix_web::Error> {
     println!("server create");
     HttpServer::new(move || {
+        let cors = Cors::default()
+            .allowed_origin("http://localhost:3000")
+            .allowed_origin_fn(|origin, _req_head| origin.as_bytes().ends_with(b".rust-lang.org"))
+            .allowed_methods(vec!["GET", "POST"])
+            .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
+            .allowed_header(http::header::CONTENT_TYPE)
+            .max_age(3600);
         App::new()
+            .wrap(cors)
             .service(index_get)
+            .service(index_head)
             .service(index_post)
             .service(hello_get)
             .service(hello_post)
