@@ -104,6 +104,7 @@ async fn main() -> Result<(), actix_web::Error> {
                     .route("/hello", web::get().to(hello_get)),
             )
     })
+    // TODO env に出す
     .bind("localhost:5555")?
     .run()
     .await?;
