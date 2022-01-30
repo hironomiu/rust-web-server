@@ -13,3 +13,5 @@ actix-rt = "2.6.0"
 serde = {version = "1.0",features=["derive"]}
 # actix-cors = "0.5.4"
 actix-cors = "0.6.0-beta.4"
+askama = "0.11.0"
+thiserror = "1.0.30"

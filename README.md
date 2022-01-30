@@ -62,6 +62,16 @@ cargo add actix-web actix-rt
 cargo add actix-cors
 ```
 
+エラーハンドリング
+```
+cargo add thiserror
+```
+
+テンプレートエンジン
+```
+cargo add askama
+```
+
 ### Cargo.toml
 
 以下のバージョン構成だとエラーになるため

@@ -6,7 +6,20 @@ use actix_web::{
     App,
     HttpResponse,
     HttpServer,
+    ResponseError,
 };
+use thiserror::Error;
+
+#[derive(Error, Debug)]
+enum MyError {
+    #[error("Failed to render HTML")]
+    AskamaError(#[from] askama::Error),
+}
+impl ResponseError for MyError {}
+
+// テンプレートエンジン
+use askama::Template;
+
 use serde::Deserialize;
 use serde::Serialize;
 
@@ -15,11 +28,32 @@ struct AddParams {
     text: String,
 }
 
+struct RootEntry {
+    text: String,
+}
+
 // #[get("/")]
-async fn index_get() -> Result<HttpResponse, actix_web::Error> {
+#[derive(Template)]
+#[template(path = "index.html")]
+struct IndexTemplate {
+    entries: Vec<RootEntry>,
+}
+
+async fn index_get() -> Result<HttpResponse, MyError> {
+    let mut entries = Vec::new();
+    entries.push(RootEntry {
+        text: "hello!".to_string(),
+    });
+    entries.push(RootEntry {
+        text: "hello!".to_string(),
+    });
+    let html = IndexTemplate { entries };
+    let response_body = html.render()?;
+
     println!("get /");
-    let response_body = "Hello world!!!";
-    Ok(HttpResponse::Ok().body(response_body))
+    Ok(HttpResponse::Ok()
+        .content_type("text/html")
+        .body(response_body))
 }
 
 // TODO curlでのcors確認用、不要になったら削除する
