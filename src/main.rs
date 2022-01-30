@@ -33,13 +33,13 @@ struct RootEntry {
     text: String,
 }
 
-// #[get("/")]
 #[derive(Template)]
 #[template(path = "index.html")]
 struct IndexTemplate {
     entries: Vec<RootEntry>,
 }
 
+// #[get("/")]
 async fn index_get() -> Result<HttpResponse, MyError> {
     let mut entries = Vec::new();
     entries.push(RootEntry {
