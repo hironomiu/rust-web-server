@@ -28,6 +28,7 @@ struct AddParams {
     text: String,
 }
 
+#[derive(Serialize)]
 struct RootEntry {
     text: String,
 }
