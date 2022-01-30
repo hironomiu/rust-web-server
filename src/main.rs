@@ -43,7 +43,7 @@ struct IndexTemplate {
 async fn index_get() -> Result<HttpResponse, MyError> {
     let mut entries = Vec::new();
     entries.push(RootEntry {
-        text: "hello!".to_string(),
+        text: "こんにちは！".to_string(),
     });
     entries.push(RootEntry {
         text: "hello!".to_string(),
