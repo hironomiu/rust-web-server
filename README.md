@@ -72,6 +72,13 @@ cargo add thiserror
 cargo add askama
 ```
 
+DB
+```
+cargo add r2d2-mysql
+cargo add mysql
+cargo add r2d2
+```
+
 ### Cargo.toml
 
 以下のバージョン構成だとエラーになるため

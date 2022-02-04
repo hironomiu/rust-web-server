@@ -15,3 +15,7 @@ serde = {version = "1.0",features=["derive"]}
 actix-cors = "0.6.0-beta.4"
 askama = "0.11.0"
 thiserror = "1.0.30"
+r2d2_mysql = "21.0.0"
+# mysql = "22.0.0"
+mysql = "21.0.0"
+r2d2 = "0.8.9"

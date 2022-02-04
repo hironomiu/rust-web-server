@@ -1,3 +1,7 @@
+extern crate mysql;
+extern crate r2d2;
+extern crate r2d2_mysql;
+
 use actix_cors::Cors;
 use actix_web::{
     // get, post, head,
@@ -22,6 +26,20 @@ use askama::Template;
 
 use serde::Deserialize;
 use serde::Serialize;
+
+// DB
+use mysql::prelude::Queryable;
+use mysql::{Opts, OptsBuilder};
+use r2d2_mysql::MysqlConnectionManager;
+use std::sync::Arc;
+// use std::thread;
+
+const DATABASE_HOST: &str = "127.0.0.1";
+const DATABASE_PORT: &str = "3306";
+const DATABASE_USER: &str = "root";
+const DATABASE_PASS: &str = "mysql";
+const DATABASE_NAME: &str = "test";
+const DATABASE_POOL_SIZE: u32 = 4;
 
 #[derive(Deserialize)]
 struct AddParams {
@@ -51,6 +69,42 @@ async fn index_get() -> Result<HttpResponse, MyError> {
     let html = IndexTemplate { entries };
     let response_body = html.render()?;
 
+    let db_url = format!(
+        "mysql://{user}:{pass}@{host}:{port}/{name}",
+        user = DATABASE_USER,
+        pass = DATABASE_PASS,
+        host = DATABASE_HOST,
+        port = DATABASE_PORT,
+        name = DATABASE_NAME
+    );
+    let opts = Opts::from_url(&db_url).unwrap();
+    let builder = OptsBuilder::from_opts(opts);
+    let manager = MysqlConnectionManager::new(builder);
+    let pool = Arc::new(
+        r2d2::Pool::builder()
+            .max_size(DATABASE_POOL_SIZE)
+            .build(manager)
+            .unwrap(),
+    );
+    #[derive(Serialize, Deserialize)]
+    pub struct Organization {
+        pub num: i32,
+    }
+
+    let pool = pool.clone();
+    let mut conn = pool.get().unwrap();
+    let ret = conn
+        .query_map("SELECT 1 as num", |num| Organization { num })
+        .map_err(|_| HttpResponse::InternalServerError());
+    match ret {
+        Ok(n) => {
+            println!("num is {:?}", n[0].num);
+            let num = n[0].num;
+            println!("{}", num)
+            //  response_body = response_body + &num.to_string();
+        }
+        Err(_) => println!("Error"),
+    }
     println!("get /");
     Ok(HttpResponse::Ok()
         .content_type("text/html")
