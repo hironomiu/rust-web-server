@@ -57,18 +57,8 @@ struct IndexTemplate {
     entries: Vec<RootEntry>,
 }
 
-// #[get("/")]
-async fn index_get() -> Result<HttpResponse, MyError> {
-    let mut entries = Vec::new();
-    entries.push(RootEntry {
-        text: "こんにちは！".to_string(),
-    });
-    entries.push(RootEntry {
-        text: "hello!".to_string(),
-    });
-    let html = IndexTemplate { entries };
-    let response_body = html.render()?;
-
+// Database Connectionを返す
+fn database() -> r2d2::PooledConnection<r2d2_mysql::MysqlConnectionManager> {
     let db_url = format!(
         "mysql://{user}:{pass}@{host}:{port}/{name}",
         user = DATABASE_USER,
@@ -86,13 +76,30 @@ async fn index_get() -> Result<HttpResponse, MyError> {
             .build(manager)
             .unwrap(),
     );
+    let pool = pool.clone();
+    let conn = pool.get().unwrap();
+    return conn;
+}
+
+// #[get("/")]
+async fn index_get() -> Result<HttpResponse, MyError> {
+    let mut entries = Vec::new();
+    entries.push(RootEntry {
+        text: "こんにちは！".to_string(),
+    });
+    entries.push(RootEntry {
+        text: "hello!".to_string(),
+    });
+    let html = IndexTemplate { entries };
+    let response_body = html.render()?;
+
+    let mut conn = database();
+
     #[derive(Serialize, Deserialize)]
     pub struct Organization {
         pub num: i32,
     }
 
-    let pool = pool.clone();
-    let mut conn = pool.get().unwrap();
     let ret = conn
         .query_map("SELECT 1 as num", |num| Organization { num })
         .map_err(|_| HttpResponse::InternalServerError());
