@@ -83,6 +83,7 @@ fn database() -> r2d2::PooledConnection<r2d2_mysql::MysqlConnectionManager> {
 
 // #[get("/")]
 async fn index_get() -> Result<HttpResponse, MyError> {
+    println!("get /");
     let mut entries = Vec::new();
     entries.push(RootEntry {
         text: "こんにちは！".to_string(),
@@ -90,8 +91,6 @@ async fn index_get() -> Result<HttpResponse, MyError> {
     entries.push(RootEntry {
         text: "hello!".to_string(),
     });
-    let html = IndexTemplate { entries };
-    let response_body = html.render()?;
 
     let mut conn = database();
 
@@ -107,12 +106,16 @@ async fn index_get() -> Result<HttpResponse, MyError> {
         Ok(n) => {
             println!("num is {:?}", n[0].num);
             let num = n[0].num;
-            println!("{}", num)
-            //  response_body = response_body + &num.to_string();
+            entries.push(RootEntry {
+                text: num.to_string(),
+            });
         }
         Err(_) => println!("Error"),
     }
-    println!("get /");
+
+    let html = IndexTemplate { entries };
+    let response_body = html.render()?;
+
     Ok(HttpResponse::Ok()
         .content_type("text/html")
         .body(response_body))
