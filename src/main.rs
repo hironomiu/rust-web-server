@@ -27,6 +27,10 @@ use askama::Template;
 use serde::Deserialize;
 use serde::Serialize;
 
+// dotenv
+use dotenv::dotenv;
+use std::env;
+
 // DB
 use mysql::prelude::Queryable;
 use mysql::{Opts, OptsBuilder};
@@ -172,7 +176,9 @@ async fn hello_post(parms: web::Json<HelloPost>) -> Result<HttpResponse, actix_w
 
 #[actix_rt::main]
 async fn main() -> Result<(), actix_web::Error> {
-    println!("server create");
+    dotenv().ok();
+    let server_address = env::var("SERVER_ADDRESS").expect("SERVER_ADDRESS must be set");
+    println!("server create:{}", server_address);
     HttpServer::new(move || {
         let cors = Cors::default()
             .allowed_origin("http://localhost:3000")
@@ -203,8 +209,7 @@ async fn main() -> Result<(), actix_web::Error> {
                     .route("/hello", web::get().to(hello_get)),
             )
     })
-    // TODO env に出す
-    .bind("localhost:5555")?
+    .bind(server_address)?
     .run()
     .await?;
     Ok(())

@@ -3,7 +3,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=rust,macos
 
 .vscode
-
+.env
 ### macOS ###
 # General
 .DS_Store

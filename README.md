@@ -79,6 +79,11 @@ cargo add mysql
 cargo add r2d2
 ```
 
+dotenv
+```
+cargo add dotenv
+```
+
 ### Cargo.toml
 
 以下のバージョン構成だとエラーになるため
