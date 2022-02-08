@@ -2,6 +2,14 @@
 
 rust + actix-web + actix-rt でのWebAPIサーバ
 
+## SetUp .env
+
+`SERVER_ADDRESS`を設定する（設定値は適時編集）
+
+```
+SERVER_ADDRESS=localhost:5555
+```
+
 ## Run
 
 ```
