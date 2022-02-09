@@ -4,6 +4,8 @@ rust + actix-web + actix-rt でのWebAPIサーバ
 
 ## SetUp .env
 
+プロジェクト直下に`.env`を作成
+
 |変数|設定値|
 |:-|:-|
 |SERVER_ADDRESS|アプリがListenするホスト（＋PORT）|
