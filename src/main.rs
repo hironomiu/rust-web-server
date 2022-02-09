@@ -2,6 +2,8 @@ extern crate mysql;
 extern crate r2d2;
 extern crate r2d2_mysql;
 
+mod database;
+
 use actix_cors::Cors;
 use actix_web::{
     // get, post, head,
@@ -31,19 +33,10 @@ use serde::Serialize;
 use dotenv::dotenv;
 use std::env;
 
-// DB
+// // DB
 use mysql::prelude::Queryable;
-use mysql::{Opts, OptsBuilder};
-use r2d2_mysql::MysqlConnectionManager;
-use std::sync::Arc;
-// use std::thread;
 
-const DATABASE_HOST: &str = "127.0.0.1";
-const DATABASE_PORT: &str = "3306";
-const DATABASE_USER: &str = "root";
-const DATABASE_PASS: &str = "mysql";
-const DATABASE_NAME: &str = "test";
-const DATABASE_POOL_SIZE: u32 = 4;
+// const DATABASE_POOL_SIZE: u32 = 4;
 
 #[derive(Deserialize)]
 struct AddParams {
@@ -61,30 +54,6 @@ struct IndexTemplate {
     entries: Vec<RootEntry>,
 }
 
-// Database Connectionを返す
-fn database() -> r2d2::PooledConnection<r2d2_mysql::MysqlConnectionManager> {
-    let db_url = format!(
-        "mysql://{user}:{pass}@{host}:{port}/{name}",
-        user = DATABASE_USER,
-        pass = DATABASE_PASS,
-        host = DATABASE_HOST,
-        port = DATABASE_PORT,
-        name = DATABASE_NAME
-    );
-    let opts = Opts::from_url(&db_url).unwrap();
-    let builder = OptsBuilder::from_opts(opts);
-    let manager = MysqlConnectionManager::new(builder);
-    let pool = Arc::new(
-        r2d2::Pool::builder()
-            .max_size(DATABASE_POOL_SIZE)
-            .build(manager)
-            .unwrap(),
-    );
-    let pool = pool.clone();
-    let conn = pool.get().unwrap();
-    return conn;
-}
-
 // #[get("/")]
 async fn index_get() -> Result<HttpResponse, MyError> {
     println!("get /");
@@ -96,7 +65,7 @@ async fn index_get() -> Result<HttpResponse, MyError> {
         text: "hello!".to_string(),
     });
 
-    let mut conn = database();
+    let mut conn = database::database();
 
     #[derive(Serialize, Deserialize)]
     pub struct Organization {
