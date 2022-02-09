@@ -4,10 +4,24 @@ rust + actix-web + actix-rt でのWebAPIサーバ
 
 ## SetUp .env
 
-`SERVER_ADDRESS`を設定する（設定値は適時編集）
+|変数|設定値|
+|:-|:-|
+|SERVER_ADDRESS|アプリがListenするホスト（＋PORT）|
+|DATABASE_HOST|データベース接続ホスト|
+|DATABASE_PORT|データベース接続PORT|
+|DATABASE_USER|データベース接続ユーザ名|
+|DATABASE_PASS|データベース接続パスワード|
+|DATABASE_NAME|データベース接続DB|
+|DATABASE_POOL_SIZE|データベースコネクションプールサイズ|
 
 ```
 SERVER_ADDRESS=localhost:5555
+DATABASE_HOST=127.0.0.1
+DATABASE_PORT=3306
+DATABASE_USER=root
+DATABASE_PASS=mysql
+DATABASE_NAME=test
+DATABASE_POOL_SIZE=4
 ```
 
 ## Run
