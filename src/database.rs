@@ -1,14 +1,12 @@
 // dotenv
 use dotenv::dotenv;
 use std::env;
+
 // DB
-// use mysql::prelude::Queryable;
 use mysql::{Opts, OptsBuilder};
 use r2d2_mysql::MysqlConnectionManager;
 use std::sync::Arc;
 // use std::thread;
-
-const DATABASE_POOL_SIZE: u32 = 4;
 
 // Database Connectionを返す
 pub fn database() -> r2d2::PooledConnection<r2d2_mysql::MysqlConnectionManager> {
@@ -26,7 +24,12 @@ pub fn database() -> r2d2::PooledConnection<r2d2_mysql::MysqlConnectionManager> 
     let manager = MysqlConnectionManager::new(builder);
     let pool = Arc::new(
         r2d2::Pool::builder()
-            .max_size(DATABASE_POOL_SIZE)
+            .max_size(
+                env::var("DATABASE_POOL_SIZE")
+                    .expect("DATABASE_POOL_SIZE must be set")
+                    .parse()
+                    .unwrap(),
+            )
             .build(manager)
             .unwrap(),
     );

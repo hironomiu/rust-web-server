@@ -1,6 +1,6 @@
-extern crate mysql;
-extern crate r2d2;
-extern crate r2d2_mysql;
+// extern crate mysql;
+// extern crate r2d2;
+// extern crate r2d2_mysql;
 
 mod database;
 
@@ -35,8 +35,6 @@ use std::env;
 
 // // DB
 use mysql::prelude::Queryable;
-
-// const DATABASE_POOL_SIZE: u32 = 4;
 
 #[derive(Deserialize)]
 struct AddParams {
