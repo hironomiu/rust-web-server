@@ -139,7 +139,7 @@ actix-web = "4.0.0-beta.3"
 actix-rt = "2.6.0"
 ```
 
-`cors`が`the trait `Transform<actix_web::app_service::AppRouting, ServiceRequest>` is not implemented for Cors`で怒られるため
+`cors`が`the trait  Transform<actix_web::app_service::AppRouting, ServiceRequest> is not implemented for Cors`で怒られるため
 
 ```
 actix-cors = "0.5.4"
