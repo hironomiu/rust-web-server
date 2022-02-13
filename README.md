@@ -58,6 +58,8 @@ curl -X POST -H  "Content-Type: application/json" -d '{"message":"Hi!John"}' loc
 
 CORSの設定確認(OK)(404はエンドポイントを宣言(例`#[head("/")]`)しAppに登録することで解消可能)
 
+解消前(404)
+
 ```
 curl -H "Origin: http://localhost:3000" --head http://localhost:5555
 
@@ -66,6 +68,17 @@ content-length: 0
 access-control-allow-origin: http://localhost:3000
 vary: Origin
 date: Thu, 27 Jan 2022 04:57:00 GMT
+```
+
+解消後(200)
+
+```
+curl -H "Origin: http://localhost:3000" --head http://localhost:5555
+HTTP/1.1 200 OK
+content-length: 14
+access-control-allow-origin: http://localhost:3000
+vary: Origin
+date: Sun, 13 Feb 2022 01:20:53 GMT
 ```
 
 CORSの設定確認(Error)
