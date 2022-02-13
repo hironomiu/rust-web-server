@@ -9,6 +9,7 @@ rust + actix-web + actix-rt でのWebAPIサーバ
 |変数|設定値|
 |:-|:-|
 |SERVER_ADDRESS|アプリがListenするホスト（＋PORT）|
+|CORS_ALLOWED_ORIGIN|CORSで許可するホスト（＋PORT)|
 |DATABASE_HOST|データベース接続ホスト|
 |DATABASE_PORT|データベース接続PORT|
 |DATABASE_USER|データベース接続ユーザ名|
@@ -18,6 +19,7 @@ rust + actix-web + actix-rt でのWebAPIサーバ
 
 ```
 SERVER_ADDRESS=localhost:5555
+CORS_ALLOWED_ORIGIN=http://localhost:3000
 DATABASE_HOST=127.0.0.1
 DATABASE_PORT=3306
 DATABASE_USER=root

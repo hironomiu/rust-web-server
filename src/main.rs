@@ -3,6 +3,7 @@
 // extern crate r2d2_mysql;
 
 mod database;
+mod route;
 
 use actix_cors::Cors;
 use actix_web::{
@@ -35,11 +36,6 @@ use std::env;
 
 // // DB
 use mysql::prelude::Queryable;
-
-#[derive(Deserialize)]
-struct AddParams {
-    text: String,
-}
 
 #[derive(Serialize)]
 struct RootEntry {
@@ -92,20 +88,6 @@ async fn index_get() -> Result<HttpResponse, MyError> {
         .body(response_body))
 }
 
-// TODO curlでのcors確認用、不要になったら削除する
-// #[head("/")]
-async fn index_head() -> Result<HttpResponse, actix_web::Error> {
-    println!("head /");
-    let response_body = "Hello world!!!";
-    Ok(HttpResponse::Ok().body(response_body))
-}
-
-// #[post("/")]
-async fn index_post(parms: web::Form<AddParams>) -> Result<HttpResponse, actix_web::Error> {
-    println!("post /: {}", parms.text);
-    Ok(HttpResponse::Ok().body(String::from(&parms.text)))
-}
-
 #[derive(Serialize, Deserialize)]
 struct Hello {
     id: Option<u32>,
@@ -145,10 +127,12 @@ async fn hello_post(parms: web::Json<HelloPost>) -> Result<HttpResponse, actix_w
 async fn main() -> Result<(), actix_web::Error> {
     dotenv().ok();
     let server_address = env::var("SERVER_ADDRESS").expect("SERVER_ADDRESS must be set");
+    let cors_allowed_origin =
+        env::var("CORS_ALLOWED_ORIGIN").expect("CORS_ALLOWED_ORIGIN must be set");
     println!("server create:{}", server_address);
     HttpServer::new(move || {
         let cors = Cors::default()
-            .allowed_origin("http://localhost:3000")
+            .allowed_origin(&cors_allowed_origin)
             .allowed_origin_fn(|origin, _req_head| origin.as_bytes().ends_with(b".rust-lang.org"))
             .allowed_methods(vec!["GET", "POST"])
             .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
@@ -159,8 +143,8 @@ async fn main() -> Result<(), actix_web::Error> {
             .service(
                 web::scope("/")
                     .route("", web::get().to(index_get))
-                    .route("", web::head().to(index_head))
-                    .route("", web::post().to(index_post)),
+                    .route("", web::head().to(route::index::index_head))
+                    .route("", web::post().to(route::index::index_post)),
             )
             // .service(index_post)
             .service(
