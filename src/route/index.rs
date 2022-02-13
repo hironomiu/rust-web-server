@@ -56,7 +56,6 @@ pub async fn index_get() -> Result<HttpResponse, MyError> {
     }
 
     let ret = conn
-        // .query_map("SELECT 1 as num", |num| Organization { num })
         // 複数カラムの取得例
         .query_map("SELECT id,name,price from items", |(id, name, price)| {
             Organization { id, name, price }
@@ -64,12 +63,10 @@ pub async fn index_get() -> Result<HttpResponse, MyError> {
         .map_err(|_| HttpResponse::InternalServerError());
     match ret {
         Ok(n) => {
-            println!("num is {:?}", n[0].id);
-            let num = n[0].id;
-            entries.push(RootEntry {
-                text: num.to_string(),
-            });
             for i in n {
+                entries.push(RootEntry {
+                    text: format!("{} {} {}", i.id, i.name, i.price),
+                });
                 println!("{} {} {}", i.id, i.name, i.price);
             }
         }
