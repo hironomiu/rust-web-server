@@ -145,7 +145,7 @@ actix-rt = "2.6.0"
 actix-cors = "0.5.4"
 ```
 
-`actix-cors = "0.6.0-beta.4"`を設定する
+から`actix-cors = "0.6.0-beta.4"`に設定を変更する
 
 ```
 actix-cors = "0.6.0-beta.4"
