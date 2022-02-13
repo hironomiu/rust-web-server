@@ -24,9 +24,6 @@ enum MyError {
 }
 impl ResponseError for MyError {}
 
-// テンプレートエンジン
-use askama::Template;
-
 use serde::Deserialize;
 use serde::Serialize;
 
@@ -34,58 +31,12 @@ use serde::Serialize;
 use dotenv::dotenv;
 use std::env;
 
-// // DB
-use mysql::prelude::Queryable;
+// DB
+// use mysql::prelude::Queryable;
 
 #[derive(Serialize)]
 struct RootEntry {
     text: String,
-}
-
-#[derive(Template)]
-#[template(path = "index.html")]
-struct IndexTemplate {
-    entries: Vec<RootEntry>,
-}
-
-// #[get("/")]
-async fn index_get() -> Result<HttpResponse, MyError> {
-    println!("get /");
-    let mut entries = Vec::new();
-    entries.push(RootEntry {
-        text: "こんにちは！".to_string(),
-    });
-    entries.push(RootEntry {
-        text: "hello!".to_string(),
-    });
-
-    let mut conn = database::database();
-
-    #[derive(Serialize, Deserialize)]
-    pub struct Organization {
-        pub num: i32,
-    }
-
-    let ret = conn
-        .query_map("SELECT 1 as num", |num| Organization { num })
-        .map_err(|_| HttpResponse::InternalServerError());
-    match ret {
-        Ok(n) => {
-            println!("num is {:?}", n[0].num);
-            let num = n[0].num;
-            entries.push(RootEntry {
-                text: num.to_string(),
-            });
-        }
-        Err(_) => println!("Error"),
-    }
-
-    let html = IndexTemplate { entries };
-    let response_body = html.render()?;
-
-    Ok(HttpResponse::Ok()
-        .content_type("text/html")
-        .body(response_body))
 }
 
 #[derive(Serialize, Deserialize)]
@@ -142,7 +93,7 @@ async fn main() -> Result<(), actix_web::Error> {
             .wrap(cors)
             .service(
                 web::scope("/")
-                    .route("", web::get().to(index_get))
+                    .route("", web::get().to(route::index::index_get))
                     .route("", web::head().to(route::index::index_head))
                     .route("", web::post().to(route::index::index_post)),
             )
