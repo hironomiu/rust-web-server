@@ -50,19 +50,28 @@ pub async fn index_get() -> Result<HttpResponse, MyError> {
 
     #[derive(Serialize, Deserialize)]
     pub struct Organization {
-        pub num: i32,
+        pub id: i32,
+        pub name: String,
+        pub price: u32,
     }
 
     let ret = conn
-        .query_map("SELECT 1 as num", |num| Organization { num })
+        // .query_map("SELECT 1 as num", |num| Organization { num })
+        // 複数カラムの取得例
+        .query_map("SELECT id,name,price from items", |(id, name, price)| {
+            Organization { id, name, price }
+        })
         .map_err(|_| HttpResponse::InternalServerError());
     match ret {
         Ok(n) => {
-            println!("num is {:?}", n[0].num);
-            let num = n[0].num;
+            println!("num is {:?}", n[0].id);
+            let num = n[0].id;
             entries.push(RootEntry {
                 text: num.to_string(),
             });
+            for i in n {
+                println!("{} {} {}", i.id, i.name, i.price);
+            }
         }
         Err(_) => println!("Error"),
     }
