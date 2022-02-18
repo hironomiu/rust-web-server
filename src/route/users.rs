@@ -18,6 +18,7 @@ struct User {
     nickname: String,
     email: String,
 }
+
 // get
 pub async fn index_get() -> Result<HttpResponse, actix_web::Error> {
     let mut conn = database::database();
@@ -32,19 +33,21 @@ pub async fn index_get() -> Result<HttpResponse, actix_web::Error> {
         )
         .map_err(|_| HttpResponse::InternalServerError());
 
+    let mut data = vec![];
+
     match ret {
         Ok(n) => {
             for i in n {
-                println!("{}", i.nickname);
+                data.push(User {
+                    id: i.id,
+                    nickname: i.nickname,
+                    email: i.email,
+                });
             }
-        } // Err(_) =>  println!("Error");
+        }
         Err(_) => println!("Error"),
     }
 
     println!("get /api/v1/users");
-    Ok(HttpResponse::Ok().json(User {
-        id: 1,
-        nickname: "hoge".to_string(),
-        email: "hoge".to_string(),
-    }))
+    Ok(HttpResponse::Ok().json(data))
 }
