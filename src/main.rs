@@ -51,11 +51,21 @@ async fn hello_get() -> Result<HttpResponse, actix_web::Error> {
     println!("get /api/v1/hello");
     let message = "hello!hello!";
     let id: Option<u32> = Some(1);
-    Ok(HttpResponse::Ok().json(Hello {
-        id: id,
-        message: String::from(message),
-        is_success: true,
-    }))
+
+    let ret = [
+        Hello {
+            id: id,
+            message: String::from(message),
+            is_success: true,
+        },
+        Hello {
+            id: id,
+            message: String::from(message),
+            is_success: true,
+        },
+    ];
+
+    Ok(HttpResponse::Ok().json(ret))
 }
 
 #[derive(Serialize, Deserialize)]
@@ -105,7 +115,9 @@ async fn main() -> Result<(), actix_web::Error> {
                             // /api/v1/hello
                             // .service(web::resource("/hello").to(hello_get))
                             .route("/hello", web::get().to(hello_get))
-                            .route("/hello", web::post().to(hello_post)),
+                            .route("/hello", web::post().to(hello_post))
+                            //
+                            .route("/users", web::get().to(route::users::index_get)),
                     )
                     // /api/hello
                     .route("/hello", web::get().to(hello_get)),
