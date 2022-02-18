@@ -90,6 +90,29 @@ HTTP/1.1 400 Bad Request
 content-length: 42
 date: Thu, 27 Jan 2022 04:57:40 GMT
 ```
+
+## DB Table Memo
+
+```
+CREATE TABLE `users` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nickname` varchar(20) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+);
+
+insert into users(nickname,email,password)
+values
+('太郎', 'taro@example.com', '$2b$10$wFi8RBzI3EpHt6XxqxLdLO41437B8RniV6ytM6NAACNPdFbjPj3je'),
+('花子', 'hanako@example.com' , '$2b$10$OaDQnNzHPyS4RKihI3loxuCQPogfuBz5/WYDEtvBpV0B2FTR4l0MW'),
+('Mike', 'mike@example.com'  , '$2b$10$migKeKnsy06FXJYlbWlW5eVDplNyvQDDGWmaqSHce88ceT1z3QGwm');
+
+```
+
 ## Install Memo
 
 `cargo add`の際に`error: no such subcommand:`で怒られる場合は`cargo install cargo-edit`を行う
