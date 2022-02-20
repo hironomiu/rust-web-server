@@ -22,6 +22,7 @@ struct User {
 // get
 pub async fn index_get() -> Result<HttpResponse, actix_web::Error> {
     let mut conn = database::database();
+    // TODO 条件句をプレースフォルダーで渡す
     let ret = conn
         .query_map(
             "select id,nickname,email from users where id = 1",
