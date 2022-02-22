@@ -1,16 +1,8 @@
 use crate::database;
 use actix_web::HttpResponse;
 use mysql::prelude::Queryable;
-use thiserror::Error;
-
 use serde::Deserialize;
 use serde::Serialize;
-
-#[derive(Error, Debug)]
-pub enum MyError {
-    #[error("Failed to render HTML")]
-    AskamaError(#[from] askama::Error),
-}
 
 #[derive(Serialize, Deserialize)]
 struct User {
