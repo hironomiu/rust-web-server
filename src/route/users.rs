@@ -22,10 +22,8 @@ pub struct PostUser {
 // post
 // TODO: postの実装
 pub async fn index_post(parms: web::Json<PostUser>) -> Result<HttpResponse, actix_web::Error> {
-    println!("post /api/v1/users => {}", parms.nickname);
-    // let mut data = vec![];
-    // data.push(parms.nickname)
-    Ok(HttpResponse::Ok().json("ok"))
+    println!("post /api/v1/users => {},{}", parms.nickname, parms.email);
+    Ok(HttpResponse::Ok().json(parms))
 }
 // get
 pub async fn index_get() -> Result<HttpResponse, actix_web::Error> {
