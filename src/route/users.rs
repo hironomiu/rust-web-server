@@ -14,10 +14,11 @@ struct User {
 // get
 pub async fn index_get() -> Result<HttpResponse, actix_web::Error> {
     let mut conn = database::database();
-    // TODO 条件句をプレースフォルダーで渡す
     let ret = conn
-        .query_map(
-            "select id,nickname,email from users where id = 1",
+        .exec_map(
+            "select id,nickname,email from users where id = ?",
+            // TODO: Request時にPATHでuser.idを受けて指定する（このエンドポイントはusers全体を返す）
+            (2,),
             |(id, nickname, email)| User {
                 id,
                 nickname,
@@ -41,6 +42,6 @@ pub async fn index_get() -> Result<HttpResponse, actix_web::Error> {
         Err(_) => println!("Error"),
     }
 
-    println!("get /api/v1/users");
+    println!("get /api/v1/users/");
     Ok(HttpResponse::Ok().json(data))
 }

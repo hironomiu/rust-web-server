@@ -93,6 +93,11 @@ date: Thu, 27 Jan 2022 04:57:40 GMT
 
 ## DB Table Memo
 
+DBが存在しない場合は作成(`test`)
+```
+create database test;
+```
+
 ```
 CREATE TABLE `users` (
   `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
