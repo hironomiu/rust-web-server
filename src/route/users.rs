@@ -51,7 +51,6 @@ pub async fn index_id_get(req: HttpRequest) -> Result<HttpResponse, actix_web::E
     let ret = conn
         .exec_map(
             "select id,nickname,email from users where id = ?",
-            // TODO: Request時にPATHでuser.idを受けて指定する（このエンドポイントはusers全体を返す）
             (userid,),
             |(id, nickname, email)| User {
                 id,
