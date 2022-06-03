@@ -54,6 +54,12 @@ curl -X POST -H  "Content-Type: application/x-www-form-urlencoded" -d 'text=Hell
 curl -X POST -H  "Content-Type: application/json" -d '{"message":"Hi!John"}' localhost:5555/api/v1/hello
 ```
 
+### users
+
+```
+curl -X POST -H "Content-Type: application/json" -d '{"nickname":"hello","email":"aa@example.com"}' localhost:5555/api/v1/users
+```
+
 ### CORS
 
 CORSの設定確認(OK)(404はエンドポイントを宣言(例`#[head("/")]`)しAppに登録することで解消可能)

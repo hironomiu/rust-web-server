@@ -1,4 +1,5 @@
 use crate::database;
+use actix_web::web;
 use actix_web::HttpRequest;
 use actix_web::HttpResponse;
 use mysql::prelude::Queryable;
@@ -12,11 +13,19 @@ struct User {
     email: String,
 }
 
+#[derive(Serialize, Deserialize)]
+pub struct PostUser {
+    nickname: String,
+    email: String,
+}
+
 // post
 // TODO: postの実装
-pub async fn index_post() -> Result<HttpResponse, actix_web::Error> {
-    println!("post /api/v1/users/");
-    Ok(HttpResponse::Ok().json("post"))
+pub async fn index_post(parms: web::Json<PostUser>) -> Result<HttpResponse, actix_web::Error> {
+    println!("post /api/v1/users => {}", parms.nickname);
+    // let mut data = vec![];
+    // data.push(parms.nickname)
+    Ok(HttpResponse::Ok().json("ok"))
 }
 // get
 pub async fn index_get() -> Result<HttpResponse, actix_web::Error> {
