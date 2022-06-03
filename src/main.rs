@@ -118,6 +118,7 @@ async fn main() -> Result<(), actix_web::Error> {
                             .route("/hello", web::post().to(hello_post))
                             //
                             .route("/users", web::get().to(route::users::index_get))
+                            .route("/users", web::post().to(route::users::index_post))
                             .route(
                                 "/users/{user_id}",
                                 web::get().to(route::users::index_id_get),

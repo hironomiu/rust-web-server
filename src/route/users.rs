@@ -12,6 +12,12 @@ struct User {
     email: String,
 }
 
+// post
+// TODO: postの実装
+pub async fn index_post() -> Result<HttpResponse, actix_web::Error> {
+    println!("post /api/v1/users/");
+    Ok(HttpResponse::Ok().json("post"))
+}
 // get
 pub async fn index_get() -> Result<HttpResponse, actix_web::Error> {
     let mut conn = database::database();
