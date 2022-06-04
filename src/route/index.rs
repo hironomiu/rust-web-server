@@ -112,13 +112,13 @@ pub async fn index_post(parms: web::Json<Hello>) -> Result<HttpResponse, actix_w
             |(col1, col2, col3)| Hello { col1, col2, col3 },
         )
         .map_err(|_| HttpResponse::InternalServerError());
-    // TODO: retの使い道
-    match ret {
+    // TODO: retの使い道(last insert idの取り方)
+    let ret = match ret {
         Ok(v) => v,
         Err(_) => {
             panic!("error");
         }
     };
 
-    Ok(HttpResponse::Ok().body(String::from("hoge")))
+    Ok(HttpResponse::Ok().json(ret))
 }
