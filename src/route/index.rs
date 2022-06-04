@@ -16,10 +16,10 @@ struct IndexTemplate {
     entries: Vec<RootEntry>,
 }
 
-#[derive(Deserialize)]
-pub struct AddParams {
-    text: String,
-}
+// #[derive(Deserialize)]
+// pub struct AddParams {
+//     text: String,
+// }
 
 use thiserror::Error;
 
@@ -89,8 +89,35 @@ pub async fn index_head() -> Result<HttpResponse, actix_web::Error> {
     Ok(HttpResponse::Ok().body(response_body))
 }
 
+#[derive(Serialize, Deserialize)]
+pub struct Hello {
+    col1: String,
+    col2: String,
+    col3: String,
+}
+
 // #[post("/")]
-pub async fn index_post(parms: web::Form<AddParams>) -> Result<HttpResponse, actix_web::Error> {
-    println!("post /: {}", parms.text);
-    Ok(HttpResponse::Ok().body(String::from(&parms.text)))
+pub async fn index_post(parms: web::Json<Hello>) -> Result<HttpResponse, actix_web::Error> {
+    println!("post /");
+    let mut conn = database::database();
+    // MEMO: insert sample
+    let ret = conn
+        .exec_map(
+            "insert into hello(col1,col2,col3) values(?,?,?)",
+            (
+                parms.col1.to_string(),
+                parms.col2.to_string(),
+                parms.col3.to_string(),
+            ),
+            |(col1, col2, col3)| Hello { col1, col2, col3 },
+        )
+        .map_err(|_| HttpResponse::InternalServerError());
+    // TODO: retの使い道
+    let ret = match ret {
+        Ok(v) => v,
+        Err(_) => {
+            panic!("error");
+        }
+    };
+    Ok(HttpResponse::Ok().body(String::from("hoge")))
 }

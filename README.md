@@ -53,7 +53,10 @@ curl -X POST -H  "Content-Type: application/x-www-form-urlencoded" -d 'text=Hell
 ```
 curl -X POST -H  "Content-Type: application/json" -d '{"message":"Hi!John"}' localhost:5555/api/v1/hello
 ```
-
+### /
+```
+curl -X POST -H  "Content-Type: application/json" -d '{"col1":"col1","col2":"col2","col3":"col3"}' localhost:5555
+```
 ### users
 
 ```
@@ -122,6 +125,15 @@ values
 ('花子', 'hanako@example.com' , '$2b$10$OaDQnNzHPyS4RKihI3loxuCQPogfuBz5/WYDEtvBpV0B2FTR4l0MW'),
 ('Mike', 'mike@example.com'  , '$2b$10$migKeKnsy06FXJYlbWlW5eVDplNyvQDDGWmaqSHce88ceT1z3QGwm');
 
+create table hello(
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `col1` varchar(20) not null,
+  `col2` varchar(20) not null,
+  `col3` varchar(20) not null,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+);
 ```
 
 ## Install Memo
