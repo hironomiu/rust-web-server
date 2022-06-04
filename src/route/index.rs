@@ -113,11 +113,12 @@ pub async fn index_post(parms: web::Json<Hello>) -> Result<HttpResponse, actix_w
         )
         .map_err(|_| HttpResponse::InternalServerError());
     // TODO: retの使い道
-    let ret = match ret {
+    match ret {
         Ok(v) => v,
         Err(_) => {
             panic!("error");
         }
     };
+
     Ok(HttpResponse::Ok().body(String::from("hoge")))
 }
