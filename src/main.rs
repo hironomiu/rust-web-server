@@ -1,7 +1,3 @@
-// extern crate mysql;
-// extern crate r2d2;
-// extern crate r2d2_mysql;
-
 mod database;
 mod route;
 
@@ -50,7 +46,6 @@ async fn main() -> Result<(), actix_web::Error> {
                     .route("", web::head().to(route::index::index_head))
                     .route("", web::post().to(route::index::index_post)),
             )
-            // .service(index_post)
             .service(
                 web::scope("/api").service(
                     web::scope("/v1")

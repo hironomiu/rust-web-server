@@ -1,5 +1,4 @@
 use crate::database;
-
 use actix_web::{web, HttpResponse};
 use mysql::prelude::Queryable;
 use serde::{Deserialize, Serialize};
