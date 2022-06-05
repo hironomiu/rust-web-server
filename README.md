@@ -54,9 +54,17 @@ curl -X POST -H  "Content-Type: application/x-www-form-urlencoded" -d 'text=Hell
 curl -X POST -H  "Content-Type: application/json" -d '{"message":"Hi!John"}' localhost:5555/api/v1/hello
 ```
 ### /
+
 ```
 curl -X POST -H  "Content-Type: application/json" -d '{"col1":"col1","col2":"col2","col3":"col3"}' localhost:5555
 ```
+
+### hello
+
+```
+curl -X POST -H  "Content-Type: application/json" -d '{"col1":"col1","col2":"col2","col3":"col3"}' localhost:5555/api/v1/hello
+```
+
 ### users
 
 ```

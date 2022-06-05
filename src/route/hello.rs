@@ -53,11 +53,25 @@ pub struct HelloPost {
 // #[post("/api/v1/hello")]
 pub async fn hello_post(parms: web::Json<HelloPost>) -> Result<HttpResponse, actix_web::Error> {
   println!("post /api/v1/hello");
-  let id: Option<u32> = Some(1);
-  Ok(HttpResponse::Ok().json(Hello {
-    id: id,
-    col1: String::from(&parms.col1),
-    col2: String::from(&parms.col2),
-    col3: String::from(&parms.col3),
-  }))
+  let mut conn = database::database();
+  let ret = conn
+    .exec_map(
+      "insert into hello(col1,col2,col3) values (?,?,?)",
+      (
+        String::from(&parms.col1),
+        String::from(&parms.col2),
+        String::from(&parms.col3),
+      ),
+      |(col1, col2, col3)| HelloPost { col1, col2, col3 },
+    )
+    .map_err(|_| HttpResponse::InternalServerError());
+
+  let ret = match ret {
+    Ok(v) => v,
+    Err(_) => {
+      panic!("error");
+    }
+  };
+
+  Ok(HttpResponse::Ok().json(ret))
 }
