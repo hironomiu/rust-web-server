@@ -6,15 +6,7 @@ mod database;
 mod route;
 
 use actix_cors::Cors;
-use actix_web::{
-    // get, post, head,
-    http,
-    web,
-    App,
-    HttpResponse,
-    HttpServer,
-    ResponseError,
-};
+use actix_web::{http, web, App, HttpServer, ResponseError};
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -24,43 +16,16 @@ enum MyError {
 }
 impl ResponseError for MyError {}
 
-use serde::Deserialize;
 use serde::Serialize;
 
 // dotenv
 use dotenv::dotenv;
 use std::env;
 
-// DB
-// use mysql::prelude::Queryable;
-
 #[derive(Serialize)]
 struct RootEntry {
     text: String,
 }
-
-#[derive(Serialize, Deserialize)]
-struct Hello {
-    id: Option<u32>,
-    message: String,
-    is_success: bool,
-}
-
-// #[derive(Serialize, Deserialize)]
-// struct HelloPost {
-//     message: String,
-// }
-
-// // #[post("/api/v1/hello")]
-// async fn hello_post(parms: web::Json<HelloPost>) -> Result<HttpResponse, actix_web::Error> {
-//     println!("post /api/v1/hello {}", parms.message);
-//     let id: Option<u32> = Some(1);
-//     Ok(HttpResponse::Ok().json(Hello {
-//         id: id,
-//         message: String::from(&parms.message),
-//         is_success: true,
-//     }))
-// }
 
 #[actix_rt::main]
 async fn main() -> Result<(), actix_web::Error> {
@@ -99,8 +64,7 @@ async fn main() -> Result<(), actix_web::Error> {
                             "/users/{user_id}",
                             web::get().to(route::users::index_id_get),
                         ),
-                ), // /api/hello
-                   // .route("/hello", web::get().to(hello_get)),
+                ),
             )
     })
     .bind(server_address)?
