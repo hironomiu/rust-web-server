@@ -46,27 +46,27 @@ struct Hello {
     is_success: bool,
 }
 
-// #[get("/api/v1/hello")]
-async fn hello_get() -> Result<HttpResponse, actix_web::Error> {
-    println!("get /api/v1/hello");
-    let message = "hello!hello!";
-    let id: Option<u32> = Some(1);
+// // #[get("/api/v1/hello")]
+// async fn hello_get() -> Result<HttpResponse, actix_web::Error> {
+//     println!("get /api/v1/hello");
+//     let message = "hello!hello!";
+//     let id: Option<u32> = Some(1);
 
-    let ret = [
-        Hello {
-            id: id,
-            message: String::from(message),
-            is_success: true,
-        },
-        Hello {
-            id: id,
-            message: String::from(message),
-            is_success: true,
-        },
-    ];
+//     let ret = [
+//         Hello {
+//             id: id,
+//             message: String::from(message),
+//             is_success: true,
+//         },
+//         Hello {
+//             id: id,
+//             message: String::from(message),
+//             is_success: true,
+//         },
+//     ];
 
-    Ok(HttpResponse::Ok().json(ret))
-}
+//     Ok(HttpResponse::Ok().json(ret))
+// }
 
 #[derive(Serialize, Deserialize)]
 struct HelloPost {
@@ -109,23 +109,21 @@ async fn main() -> Result<(), actix_web::Error> {
             )
             // .service(index_post)
             .service(
-                web::scope("/api")
-                    .service(
-                        web::scope("/v1")
-                            // /api/v1/hello
-                            // .service(web::resource("/hello").to(hello_get))
-                            .route("/hello", web::get().to(hello_get))
-                            .route("/hello", web::post().to(hello_post))
-                            //
-                            .route("/users", web::get().to(route::users::index_get))
-                            .route("/users", web::post().to(route::users::index_post))
-                            .route(
-                                "/users/{user_id}",
-                                web::get().to(route::users::index_id_get),
-                            ),
-                    )
-                    // /api/hello
-                    .route("/hello", web::get().to(hello_get)),
+                web::scope("/api").service(
+                    web::scope("/v1")
+                        // /api/v1/hello
+                        // .service(web::resource("/hello").to(hello_get))
+                        .route("/hello", web::get().to(route::hello::hello_get))
+                        .route("/hello", web::post().to(hello_post))
+                        //
+                        .route("/users", web::get().to(route::users::index_get))
+                        .route("/users", web::post().to(route::users::index_post))
+                        .route(
+                            "/users/{user_id}",
+                            web::get().to(route::users::index_id_get),
+                        ),
+                ), // /api/hello
+                   // .route("/hello", web::get().to(hello_get)),
             )
     })
     .bind(server_address)?
