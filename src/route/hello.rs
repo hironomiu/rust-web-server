@@ -54,6 +54,7 @@ pub struct HelloPost {
 pub async fn hello_post(parms: web::Json<HelloPost>) -> Result<HttpResponse, actix_web::Error> {
   println!("post /api/v1/hello");
   let mut conn = database::database();
+  // TODO: last insert idを取得する
   let ret = conn
     .exec_map(
       "insert into hello(col1,col2,col3) values (?,?,?)",
@@ -67,7 +68,10 @@ pub async fn hello_post(parms: web::Json<HelloPost>) -> Result<HttpResponse, act
     .map_err(|_| HttpResponse::InternalServerError());
 
   let ret = match ret {
-    Ok(v) => v,
+    Ok(v) => {
+      println!("called");
+      v
+    }
     Err(_) => {
       panic!("error");
     }
