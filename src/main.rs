@@ -2,6 +2,7 @@ mod database;
 mod route;
 
 use actix_cors::Cors;
+use actix_identity::{CookieIdentityPolicy, IdentityService};
 use actix_web::{http, web, App, HttpServer, ResponseError};
 use thiserror::Error;
 
@@ -31,6 +32,9 @@ async fn main() -> Result<(), actix_web::Error> {
         env::var("CORS_ALLOWED_ORIGIN").expect("CORS_ALLOWED_ORIGIN must be set");
     println!("server create:{}", server_address);
     HttpServer::new(move || {
+        let policy = CookieIdentityPolicy::new(&[0; 32])
+            .name("auth-cookie")
+            .secure(false);
         let cors = Cors::default()
             .allowed_origin(&cors_allowed_origin)
             .allowed_origin_fn(|origin, _req_head| origin.as_bytes().ends_with(b".rust-lang.org"))
@@ -40,6 +44,7 @@ async fn main() -> Result<(), actix_web::Error> {
             .max_age(3600);
         App::new()
             .wrap(cors)
+            .wrap(IdentityService::new(policy))
             .service(
                 web::scope("/")
                     .route("", web::get().to(route::index::index_get))
