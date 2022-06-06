@@ -58,6 +58,11 @@ async fn main() -> Result<(), actix_web::Error> {
                         .route(
                             "/users/{user_id}",
                             web::get().to(route::users::index_id_get),
+                        )
+                        .service(
+                            web::scope("/auth")
+                                // /api/v1/auth
+                                .route("/signin", web::post().to(route::auth::index_signin_post)),
                         ),
                 ),
             )
