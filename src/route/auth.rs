@@ -19,3 +19,8 @@ pub async fn index_signin_post(
   id.remember("User1".to_owned());
   Ok(HttpResponse::Ok().json(parms))
 }
+
+pub async fn index_signout_post(id: Identity) -> Result<HttpResponse, actix_web::Error> {
+  id.forget();
+  Ok(HttpResponse::Ok().json("OK"))
+}

@@ -67,7 +67,8 @@ async fn main() -> Result<(), actix_web::Error> {
                         .service(
                             web::scope("/auth")
                                 // /api/v1/auth
-                                .route("/signin", web::post().to(route::auth::index_signin_post)),
+                                .route("/signin", web::post().to(route::auth::index_signin_post))
+                                .route("/signout", web::post().to(route::auth::index_signout_post)),
                         ),
                 ),
             )
