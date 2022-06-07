@@ -3,6 +3,8 @@ mod route;
 
 use actix_cors::Cors;
 use actix_identity::{CookieIdentityPolicy, IdentityService};
+use actix_web::cookie::SameSite;
+
 use actix_web::{http, web, App, HttpServer, ResponseError};
 use thiserror::Error;
 
@@ -34,6 +36,8 @@ async fn main() -> Result<(), actix_web::Error> {
     HttpServer::new(move || {
         let policy = CookieIdentityPolicy::new(&[0; 32])
             .name("auth-cookie")
+            // TODO: とりあえず設定
+            .same_site(SameSite::Lax)
             .secure(false);
         let cors = Cors::default()
             .allowed_origin(&cors_allowed_origin)
