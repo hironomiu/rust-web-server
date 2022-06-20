@@ -17,12 +17,40 @@ struct User {
 pub struct PostUser {
     nickname: String,
     email: String,
+    password: String,
 }
 
 // post
 // TODO: postの実装
 pub async fn index_post(parms: web::Json<PostUser>) -> Result<HttpResponse, actix_web::Error> {
     println!("post /api/v1/users => {},{}", parms.nickname, parms.email);
+    let mut conn = database::database();
+
+    let ret = conn
+        .exec_map(
+            "insert into users(nickname,email,password) values(?,?,?)",
+            (
+                String::from(&parms.nickname),
+                String::from(&parms.email),
+                // TODO: ハッシュ化
+                String::from(&parms.password),
+            ),
+            |(nickname, email, password)| PostUser {
+                nickname,
+                email,
+                password,
+            },
+        )
+        .map_err(|_| HttpResponse::InternalServerError());
+
+    // TODO: 戻り値
+    match ret {
+        Ok(v) => {
+            println!("Ok");
+            v
+        }
+        Err(_) => panic!("error"),
+    };
     Ok(HttpResponse::Ok().json(parms))
 }
 // get
