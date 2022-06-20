@@ -22,7 +22,7 @@ pub struct PostUser {
 }
 
 // post
-// TODO: postの実装
+// TODO: SignUpとして移動する
 pub async fn index_post(parms: web::Json<PostUser>) -> Result<HttpResponse, actix_web::Error> {
     println!("post /api/v1/users => {},{}", parms.nickname, parms.email);
     let mut conn = database::database();

@@ -1,5 +1,8 @@
+use crate::database;
 use actix_identity::Identity;
 use actix_web::*;
+use mysql::prelude::Queryable;
+use pwhash::unix;
 
 use serde::{Deserialize, Serialize};
 
@@ -15,6 +18,30 @@ pub async fn index_signin_post(
   parms: web::Json<Auth>,
 ) -> Result<HttpResponse, actix_web::Error> {
   println!("post /api/v1/auth/signin");
+
+  let mut conn = database::database();
+  let ret = conn
+    .exec_map(
+      "select email, password from users where email = ?",
+      (String::from(&parms.email),),
+      |(email, password)| Auth { email, password },
+    )
+    .map_err(|_| HttpResponse::InternalServerError());
+  match ret {
+    Ok(n) => {
+      println!("{}", n.len());
+      // TODO: SELECTにヒットしなかった場合の処理(else)の追加
+      if n.len() > 0 {
+        // TODO: パスワードハッシュ突き合わせ後の処理
+        println!(
+          "password is {}",
+          unix::verify(&parms.password, &n[0].password)
+        );
+      }
+    }
+    Err(_) => panic!("error"),
+  };
+
   // TODO: Identityについて調べる
   id.remember("User1".to_owned());
   // let aa = id.identity();
