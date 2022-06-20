@@ -3,6 +3,7 @@ use actix_web::web;
 use actix_web::HttpRequest;
 use actix_web::HttpResponse;
 use mysql::prelude::Queryable;
+use pwhash::bcrypt;
 use serde::Deserialize;
 use serde::Serialize;
 
@@ -32,8 +33,7 @@ pub async fn index_post(parms: web::Json<PostUser>) -> Result<HttpResponse, acti
             (
                 String::from(&parms.nickname),
                 String::from(&parms.email),
-                // TODO: ハッシュ化
-                String::from(&parms.password),
+                String::from(bcrypt::hash(&parms.password).unwrap()),
             ),
             |(nickname, email, password)| PostUser {
                 nickname,

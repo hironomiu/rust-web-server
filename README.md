@@ -210,3 +210,9 @@ actix-cors = "0.6.0-beta.4"
 ```
 mysql = "21.0.0"
 ```
+
+password hash(bcrypt) 用
+
+```
+pwhash = "1"
+```
