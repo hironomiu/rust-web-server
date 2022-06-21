@@ -2,7 +2,7 @@ use crate::database;
 use actix_identity::Identity;
 use actix_web::*;
 use mysql::prelude::Queryable;
-use pwhash::unix;
+use pwhash::bcrypt;
 
 use serde::{Deserialize, Serialize};
 
@@ -35,7 +35,7 @@ pub async fn index_signin_post(
         // TODO: パスワードハッシュ突き合わせ後の処理
         println!(
           "password is {}",
-          unix::verify(&parms.password, &n[0].password)
+          bcrypt::verify(&parms.password, &n[0].password)
         );
       }
     }
