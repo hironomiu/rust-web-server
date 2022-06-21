@@ -12,6 +12,12 @@ pub struct Auth {
   password: String,
 }
 
+#[derive(Serialize, Deserialize)]
+pub struct ResJson {
+  is_sign_in: bool,
+  message: String,
+}
+
 // TODO: 認証（SignIn）の実装
 pub async fn index_signin_post(
   id: Identity,
@@ -27,19 +33,22 @@ pub async fn index_signin_post(
       |(email, password)| Auth { email, password },
     )
     .map_err(|_| HttpResponse::InternalServerError());
-  match ret {
+  let is_sign_in: bool = match ret {
     Ok(n) => {
       println!("{}", n.len());
-      // TODO: SELECTにヒットしなかった場合の処理(else)の追加
       if n.len() > 0 {
-        // TODO: パスワードハッシュ突き合わせ後の処理
-        println!(
-          "password is {}",
-          bcrypt::verify(&parms.password, &n[0].password)
-        );
+        bcrypt::verify(&parms.password, &n[0].password)
+      } else {
+        false
       }
     }
-    Err(_) => panic!("error"),
+    Err(_) => false,
+  };
+
+  // TODO: 認証処理でメッセージを書き分ける
+  let res = ResJson {
+    is_sign_in: is_sign_in,
+    message: String::from("message"),
   };
 
   // TODO: Identityについて調べる
@@ -50,7 +59,7 @@ pub async fn index_signin_post(
   //   None => println!("None"),
   // }
   // Ok(HttpResponse::Ok().finish())
-  Ok(HttpResponse::Ok().json(parms))
+  Ok(HttpResponse::Ok().json(res))
 }
 
 pub async fn index_signout_post(id: Identity) -> Result<HttpResponse, actix_web::Error> {
